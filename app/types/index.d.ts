@@ -142,16 +142,42 @@ export interface CreateExpenseItemData {
   category: ExpenseCategory
 }
 
+export interface ApprovalQueueItem {
+  id: string
+  title: string
+  user: {
+    name: string
+    email: string
+    department?: {
+      name: string
+    }
+  }
+  totalAmount: number
+  submittedAt: string
+  status: string
+}
+
+export interface ClaimStatusData {
+  status: string
+  count: number
+  percentage: number
+}
+
+export interface MonthlyData {
+  month: string
+  amount: number
+  count: number
+}
+
+export interface ClaimCategoryData {
+  category: string
+  count: number
+  totalAmount: number
+}
+
 export interface DashboardData {
-  statusData: Array<{ status: string, count: number, percentage: number }>
-  monthlyData: Array<{ month: string, amount: number, count: number }>
-  categoryData: Array<{ category: string, count: number, totalAmount: number }>
-  approvalQueue: Array<{
-    id: string
-    title: string
-    user: { name: string, email: string, department?: { name: string } }
-    totalAmount: number
-    submittedAt: string
-    status: string
-  }>
+  statusData: ClaimStatusData[]
+  monthlyData: MonthlyData[]
+  categoryData: ClaimCategoryData[]
+  approvalQueue: ApprovalQueueItem[]
 }
