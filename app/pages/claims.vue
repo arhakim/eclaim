@@ -10,6 +10,7 @@ definePageMeta({
 })
 
 const { claims, fetchClaims } = useClaims()
+const { downloadClaimPDF } = usePDF()
 const UBadge = resolveComponent('UBadge')
 const UButton = resolveComponent('UButton')
 const UDropdownMenu = resolveComponent('UDropdownMenu')
@@ -126,6 +127,17 @@ function getRowItems(row: Row<ExpenseClaim>) {
       icon: 'i-lucide-trash',
       onSelect() {
         deleteClaim(claim)
+      }
+    })
+  }
+
+  // Add PDF download action for approved claims
+  if (claim.status === 'APPROVED') {
+    items.push({
+      label: 'Download PDF',
+      icon: 'i-lucide-download',
+      onSelect() {
+        downloadClaimPDF(claim)
       }
     })
   }
