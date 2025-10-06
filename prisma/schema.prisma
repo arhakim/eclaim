@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,174 +7,121 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// User model for employees and managers
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String
-  password  String
-  avatar    String?
-  role      UserRole @default(EMPLOYEE)
-
-  // Department relationship
-  departmentId String?
-  department   Department? @relation(fields: [departmentId], references: [id])
-
-  // Manager relationship (self-referencing)
-  managerId String?
-  manager   User?   @relation("UserManager", fields: [managerId], references: [id])
-  employees User[]  @relation("UserManager")
-
-  // Claims submitted by this user
-  claims    ExpenseClaim[]
-
-  // Approvals made by this user (as manager)
-  approvals Approval[]
-
-  // Notifications received by this user
-  notifications Notification[]
-
-  // Notifications sent by this user
+  id                String         @id @default(cuid())
+  email             String         @unique
+  name              String
+  avatar            String?
+  role              String         @db.VarChar
+  departmentId      String?
+  managerId         String?
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  password          String
+  approvals         Approval[]
+  claims            ExpenseClaim[]
   sentNotifications Notification[] @relation("NotificationSender")
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  notifications     Notification[]
+  department        Department?    @relation(fields: [departmentId], references: [id])
+  manager           User?          @relation("UserManager", fields: [managerId], references: [id])
+  employees         User[]         @relation("UserManager")
 
   @@map("users")
 }
 
-// Department model
 model Department {
-  id          String @id @default(cuid())
-  name        String @unique
+  id          String   @id @default(cuid())
+  name        String   @unique
   description String?
-
-  users User[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  users       User[]
 
   @@map("departments")
 }
 
-// Main expense claim model
 model ExpenseClaim {
-  id          String            @id @default(cuid())
-  title       String
-  description String?
-  totalAmount Decimal           @db.Decimal(10, 2)
-  currency    String            @default("USD")
-  status      ExpenseClaimStatus @default(DRAFT)
-
-  // Dates
-  expenseDate DateTime
-  submittedAt DateTime?
-
-  // User relationship
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
-
-  // Items and receipts
-  items    ExpenseItem[]
-  receipts Receipt[]
-
-  // Approval workflow
-  approvals Approval[]
-
-  // Notifications related to this claim
+  id            String         @id @default(cuid())
+  title         String
+  description   String?
+  totalAmount   Decimal        @db.Decimal(10, 2)
+  currency      String         @default("USD")
+  status        String         @db.VarChar
+  expenseDate   DateTime
+  submittedAt   DateTime?
+  userId        String
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  approvals     Approval[]
+  user          User           @relation(fields: [userId], references: [id])
+  items         ExpenseItem[]
   notifications Notification[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  receipts      Receipt[]
 
   @@map("expense_claims")
 }
 
-// Individual expense items within a claim
 model ExpenseItem {
-  id          String  @id @default(cuid())
+  id          String       @id @default(cuid())
   description String
-  amount      Decimal @db.Decimal(10, 2)
-  category    ExpenseCategory
-
-  // Claim relationship
-  claimId String
-  claim   ExpenseClaim @relation(fields: [claimId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  amount      Decimal      @db.Decimal(10, 2)
+  category    String       @db.VarChar
+  claimId     String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  claim       ExpenseClaim @relation(fields: [claimId], references: [id], onDelete: Cascade)
 
   @@map("expense_items")
 }
 
-// Receipt attachments
 model Receipt {
-  id       String @id @default(cuid())
-  filename String
-  fileUrl  String
-  fileSize Int
-  mimeType String
-
-  // Claim relationship
-  claimId String
-  claim   ExpenseClaim @relation(fields: [claimId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
+  id        String       @id @default(cuid())
+  filename  String
+  fileUrl   String
+  fileSize  Int
+  mimeType  String
+  claimId   String
+  createdAt DateTime     @default(now())
+  claim     ExpenseClaim @relation(fields: [claimId], references: [id], onDelete: Cascade)
 
   @@map("receipts")
 }
 
-// Approval workflow tracking
 model Approval {
-  id       String         @id @default(cuid())
-  status   ApprovalStatus @default(PENDING)
-  comments String?
-
-  // Relationships
-  claimId String
-  claim   ExpenseClaim @relation(fields: [claimId], references: [id], onDelete: Cascade)
-
+  id         String       @id @default(cuid())
+  status     String       @db.VarChar
+  comments   String?
+  claimId    String
   approverId String
-  approver   User   @relation(fields: [approverId], references: [id])
-
   approvedAt DateTime?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  approver   User         @relation(fields: [approverId], references: [id])
+  claim      ExpenseClaim @relation(fields: [claimId], references: [id], onDelete: Cascade)
 
   @@unique([claimId, approverId])
   @@map("approvals")
 }
 
-// Notification model for in-app notifications
 model Notification {
-  id      String          @id @default(cuid())
-  title   String
-  message String
-  type    NotificationType @default(INFO)
-  isRead  Boolean         @default(false)
-
-  // User relationship
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  // Optional claim relationship for claim-related notifications
-  claimId String?
-  claim   ExpenseClaim? @relation(fields: [claimId], references: [id], onDelete: Cascade)
-
-  // Optional sender for notifications from other users
-  senderId String?
-  sender   User?   @relation("NotificationSender", fields: [senderId], references: [id])
-
-  // Additional data (JSON field for flexible notification data)
-  data Json?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        String        @id @default(cuid())
+  title     String
+  message   String
+  type      String        @db.VarChar
+  isRead    Boolean       @default(false)
+  userId    String
+  claimId   String?
+  senderId  String?
+  data      Json?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  claim     ExpenseClaim? @relation(fields: [claimId], references: [id], onDelete: Cascade)
+  sender    User?         @relation("NotificationSender", fields: [senderId], references: [id])
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("notifications")
 }
 
-// Enums
 enum UserRole {
   EMPLOYEE
   MANAGER
