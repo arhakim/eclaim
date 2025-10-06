@@ -5,11 +5,25 @@ definePageMeta({
 
 const { summaries, loading, error, fetchDashboard } = useDashboard()
 const { isNotificationsSlideoverOpen } = _useDashboard()
+const { triggerReminders } = useScheduler()
+
+const authStore = useAuthStore()
+const userRole = computed(() => authStore.user?.role || 'user')
 
 const refresh = () => {
   fetchDashboard().catch((err) => {
     console.error('Error refreshing dashboard:', err)
   })
+}
+
+const triggeringReminders = ref(false)
+const handleTriggerReminders = async () => {
+  try {
+    triggeringReminders.value = true
+    await triggerReminders()
+  } finally {
+    triggeringReminders.value = false
+  }
 }
 
 onMounted(fetchDashboard)
@@ -50,6 +64,19 @@ onMounted(fetchDashboard)
                 @click="refresh()"
               >
                 Refresh
+              </UButton>
+
+              <!-- Admin only: Trigger reminders manually -->
+              <UButton
+                v-if="userRole === 'ADMIN'"
+                size="sm"
+                variant="outline"
+                color="orange"
+                :loading="triggeringReminders"
+                @click="handleTriggerReminders"
+              >
+                <UIcon name="i-lucide-bell-ring" class="mr-1.5" />
+                Trigger Reminders
               </UButton>
             </div>
           </ClientOnly>

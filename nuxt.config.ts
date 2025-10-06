@@ -20,6 +20,7 @@ export default defineNuxtConfig({
     databaseUrl: process.env.DATABASE_URL,
     maxFileSize: process.env.MAX_FILE_SIZE || '5242880',
     allowedFileTypes: process.env.ALLOWED_FILE_TYPES || 'image/jpeg,image/png,image/gif,application/pdf',
+    schedulerTimezone: process.env.SCHEDULER_TIMEZONE || 'Asia/Jakarta',
     public: {
       appUrl: process.env.APP_URL || 'http://localhost:3000',
       companyName: process.env.COMPANY_NAME || 'Your Company'

@@ -175,6 +175,26 @@ export interface ClaimCategoryData {
   totalAmount: number
 }
 
+export interface NotificationData {
+  claimId: string
+  claimTitle: string
+  recipientId: string
+  type: 'APPROVED' | 'REJECTED'
+  approverName: string
+  approverId: string
+  comments?: string
+}
+
+export interface NotificationOptions {
+  title: string
+  message: string
+  type: 'INFO' | 'SUCCESS' | 'WARNING' | 'ERROR' | 'CLAIM_APPROVED' | 'CLAIM_REJECTED' | 'CLAIM_SUBMITTED'
+  userId: string
+  claimId?: string
+  senderId?: string
+  data?: any
+}
+
 export interface DashboardData {
   statusData: ClaimStatusData[]
   monthlyData: MonthlyData[]
