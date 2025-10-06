@@ -27,7 +27,7 @@
     "date-fns": "^4.1.0",
     "jsonwebtoken": "^9.0.2",
     "jspdf": "^3.0.3",
-    "node-cron": "^4.2.1",
+    "node-cron": "^3.0.3",
     "nuxt": "^4.1.2",
     "pinia": "^3.0.3",
     "prisma": "^6.16.3",
@@ -42,7 +42,8 @@
     "vue-tsc": "^3.1.0"
   },
   "resolutions": {
-    "unimport": "4.1.1"
+    "unimport": "4.1.1",
+    "node-cron": "^3.0.3"
   },
   "packageManager": "pnpm@10.17.1",
   "prisma": {

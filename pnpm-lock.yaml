@@ -6,6 +6,7 @@ settings:
 
 overrides:
   unimport: 4.1.1
+  node-cron: ^3.0.3
 
 importers:
 
@@ -60,8 +61,8 @@ importers:
         specifier: ^3.0.3
         version: 3.0.3
       node-cron:
-        specifier: ^4.2.1
-        version: 4.2.1
+        specifier: ^3.0.3
+        version: 3.0.3
       nuxt:
         specifier: ^4.1.2
         version: 4.1.2(@parcel/watcher@2.5.1)(@types/node@24.6.2)(@vue/compiler-sfc@3.5.22)(db0@0.3.2)(eslint@9.36.0(jiti@2.6.0))(ioredis@5.8.0)(lightningcss@1.30.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.52.3)(terser@5.44.0)(tsx@4.20.6)(typescript@5.9.2)(vite@7.1.7(@types/node@24.6.2)(jiti@2.6.0)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))(vue-tsc@3.1.0(typescript@5.9.2))(yaml@2.8.1)
@@ -3931,8 +3932,8 @@ packages:
   node-addon-api@7.1.1:
     resolution: {integrity: sha512-5m3bsyrjFWE1xf7nz7YXdN4udnVtXK6/Yfgn5qnahL6bCkf2yKt4k3nuTKAtT4r3IG8JNR2ncsIMdZuAzJjHQQ==}
 
-  node-cron@4.2.1:
-    resolution: {integrity: sha512-lgimEHPE/QDgFlywTd8yTR61ptugX3Qer29efeyWw2rv259HtGBNn1vZVmp8lB9uo9wC0t/AT4iGqXxia+CJFg==}
+  node-cron@3.0.3:
+    resolution: {integrity: sha512-dOal67//nohNgYWb+nWmg5dkFdIwDm8EpeGYMekPMrngV3637lqnX0lbUcCtgibHTz6SEz7DAIjKvKDFYCnO1A==}
     engines: {node: '>=6.0.0'}
 
   node-fetch-native@1.6.7:
@@ -5082,6 +5083,10 @@ packages:
 
   utrie@1.0.2:
     resolution: {integrity: sha512-1MLa5ouZiOmQzUbjbu9VmjLzn1QLXBhwpUa7kdLUQK+KQ5KA9I1vk5U4YHe/X2Ch7PYnJfWuWT+VbuxbGwljhw==}
+
+  uuid@8.3.2:
+    resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
+    hasBin: true
 
   vaul-vue@0.4.1:
     resolution: {integrity: sha512-A6jOWOZX5yvyo1qMn7IveoWN91mJI5L3BUKsIwkg6qrTGgHs1Sb1JF/vyLJgnbN1rH4OOOxFbtqL9A46bOyGUQ==}
@@ -9686,7 +9691,9 @@ snapshots:
 
   node-addon-api@7.1.1: {}
 
-  node-cron@4.2.1: {}
+  node-cron@3.0.3:
+    dependencies:
+      uuid: 8.3.2
 
   node-fetch-native@1.6.7: {}
 
@@ -10978,6 +10985,8 @@ snapshots:
     dependencies:
       base64-arraybuffer: 1.0.2
     optional: true
+
+  uuid@8.3.2: {}
 
   vaul-vue@0.4.1(reka-ui@2.5.0(typescript@5.9.2)(vue@3.5.22(typescript@5.9.2)))(vue@3.5.22(typescript@5.9.2)):
     dependencies:
